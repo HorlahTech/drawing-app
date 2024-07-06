@@ -14,7 +14,7 @@ Features
 - Hide Toolbar: The toolbar can be hidden to provide more drawing space.
 
 Preview:
-<img width="85%" src="https://github.com/HorlahTech/drawing-app/blob/main/WhatsApp%20GIF%202024-07-07%20at%2000.27.50.gif" alt="drawing app"></img>
+<img width="55%" src="https://github.com/HorlahTech/drawing-app/blob/main/WhatsApp%20GIF%202024-07-07%20at%2000.27.50.gif" alt="drawing app"></img>
 
 Installation
 Clone the repository:
