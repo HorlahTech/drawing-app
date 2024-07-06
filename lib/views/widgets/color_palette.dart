@@ -1,21 +1,20 @@
-import 'package:drawing_app_test/controller/drawing_controller.dart';
+import 'package:drawing_app_test/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:flutter_svg/svg.dart';
 
-class ColorPalette extends ConsumerWidget {
-  String title;
-  void Function(Color) onColorChanged;
-  ColorPalette({
-    Key? key,
+class ColorPalette extends StatelessWidget {
+ final String title;
+ final void Function(Color) onColorChanged;
+const  ColorPalette({
+    super.key,
     required this.title,
     required this.onColorChanged,
-  }) : super(key: key);
+  });
 
   @override
-  Widget build(BuildContext context, ref) {
+  Widget build(BuildContext context, ) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.start,
@@ -25,7 +24,7 @@ class ColorPalette extends ConsumerWidget {
           cursor: SystemMouseCursors.click,
           child: GestureDetector(
             onTap: () {
-              showColorWheel(context, ref);
+              showColorWheel(context, );
             },
             child: SvgPicture.asset(
               'assets/images/color_wheel.svg',
@@ -38,7 +37,7 @@ class ColorPalette extends ConsumerWidget {
     );
   }
 
-  void showColorWheel(BuildContext context, WidgetRef ref) {
+  void showColorWheel(BuildContext context, ) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -46,8 +45,8 @@ class ColorPalette extends ConsumerWidget {
           title: Text(title),
           content: SingleChildScrollView(
             child: ColorPicker(
-                pickerColor: ref.watch(drawingController).pencilColor,
-                onColorChanged: onColorChanged),
+                pickerColor: AppColors.circleColorBG,
+                onColorChanged: onColorChanged,),
           ),
           actions: <Widget>[
             TextButton(

@@ -13,12 +13,11 @@ class DrawingController extends ChangeNotifier {
   bool isZoom = false;
   Color bgColor = AppColors.white;
   Color pencilColor = Colors.black;
-  double pencilWidth = 2.0 ;
-
+  double pencilWidth = 2.0;
   bool isErazer = false;
   DrawingPoint? currentDrawingPoint;
   DrawingMode mode = DrawingMode.scibble;
-
+/// onPanStart create drawingpoint and  recored the ofset of user gesture
   void onPanStart(details) {
     currentDrawingPoint = DrawingPoint(
       offsets: [
@@ -28,12 +27,12 @@ class DrawingController extends ChangeNotifier {
       mode: mode,
       width:  pencilWidth,
     );
-
     if (currentDrawingPoint == null) return;
     drawingPoints.add(currentDrawingPoint!);
     historyDrawingPoints = List.of(drawingPoints);
     notifyListeners();
   }
+/// onPanUpdate update the movement of the user gesture and record position
 
   void onPanUpdate(details) {
     if (currentDrawingPoint == null) return;
@@ -45,19 +44,19 @@ class DrawingController extends ChangeNotifier {
     historyDrawingPoints = List.of(drawingPoints);
     notifyListeners();
   }
-
+/// onpanEnd set the drawningpoint to null when gesture movement stop
   void onPanEnd(_) {
     currentDrawingPoint = null;
     notifyListeners();
   }
-
+/// undo function remove the last point drawing pont
   void undo() {
     if (drawingPoints.isNotEmpty && historyDrawingPoints.isNotEmpty) {
       drawingPoints.removeLast();
     }
     notifyListeners();
   }
-
+  /// undo function add the last point drawing pont when the drawingpoints length is lesser than historyDrawingPoints.length
   void redo() {
     if (drawingPoints.length < historyDrawingPoints.length) {
       final index = drawingPoints.length;
@@ -66,7 +65,7 @@ class DrawingController extends ChangeNotifier {
 
     notifyListeners();
   }
-
+/// cleaer all the drawing point
   void clear() {
     drawingPoints.clear();
 
@@ -86,7 +85,9 @@ class DrawingController extends ChangeNotifier {
   }
 
   void changeBgColor(Color color) {
+    clear();
     bgColor = color;
+
 
     notifyListeners();
   }
@@ -96,7 +97,9 @@ class DrawingController extends ChangeNotifier {
     notifyListeners();
   }
   void pencilSizeOnchange(double value){
+
     pencilWidth = value;
+
     notifyListeners();
   }
 

@@ -1,4 +1,3 @@
-import 'package:drawing_app_test/utils/app_colors.dart';
 import 'package:drawing_app_test/views/drawing_canvas.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -15,12 +14,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setEnabledSystemUIMode(
-        SystemUiMode.manual, overlays: [SystemUiOverlay.bottom]);
+        SystemUiMode.manual, overlays: [SystemUiOverlay.bottom],);
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.landscapeLeft,
       DeviceOrientation.landscapeRight,
       DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown
+      DeviceOrientation.portraitDown,
     ]);
     return MaterialApp(
       debugShowCheckedModeBanner: false,

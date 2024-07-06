@@ -13,7 +13,7 @@ class DrawingPoint {
       {this.offsets = const [],
       this.color = Colors.pink,
       this.width = 2,
-      this.mode = DrawingMode.scibble, this.isErazer = false});
+      this.mode = DrawingMode.scibble, this.isErazer = false,});
 
   DrawingPoint copyWith({
     List<Offset>? offsets,

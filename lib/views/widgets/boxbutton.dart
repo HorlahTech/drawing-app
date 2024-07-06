@@ -1,6 +1,7 @@
+import 'package:drawing_app_test/controller/popup_manager.dart';
 import 'package:drawing_app_test/utils/app_colors.dart';
 import 'package:flutter/material.dart';
-final List<OverlayEntry?> activePopups = [];
+
 class BoxButton extends StatelessWidget {
   BoxButton({
     super.key,
@@ -12,13 +13,13 @@ class BoxButton extends StatelessWidget {
     this.hasPopUp = false,
     this.popupChildren = const [],
   }): onChanged = null, isSlider = false, sliderValue= null;
-  BoxButton.Slider({
+   BoxButton.slider({super.key,
     this.color,
     required this.icon,
-    this.sliderValue = 2,
+    this.sliderValue,
     this.iconcolor = AppColors.white,
     this.onChanged,
-}): onTap = null,hasPopUp = false,popupChildren = null, isSlider = true, isSelected =false;
+}): onTap = null,hasPopUp = false,popupChildren = null, isSlider = true, isSelected = false;
   final VoidCallback? onTap ;
   final Color? color;
   final double? sliderValue;
@@ -29,10 +30,11 @@ class BoxButton extends StatelessWidget {
   final bool isSelected;
   final List<Widget>? popupChildren;
  final void Function(double)? onChanged;
+
   OverlayEntry? _overlayEntry;
 
   OverlayEntry _createOverlayEntry(
-      BuildContext context, Offset buttonPosition) {
+      BuildContext context, Offset buttonPosition,) {
     return OverlayEntry(
       builder: (context) {
         return Positioned(
@@ -54,7 +56,6 @@ class BoxButton extends StatelessWidget {
 
   }
 
-
   void _hidePopup() {
     if (_overlayEntry != null) {
       // _overlayEntry!.remove();
@@ -62,7 +63,9 @@ class BoxButton extends StatelessWidget {
       _overlayEntry = null;
     }
   }
+
   Widget _buildPop(BuildContext context) {
+
     return Material(
       color: Colors.transparent,
       child: isSlider && !hasPopUp
@@ -122,7 +125,7 @@ class BoxButton extends StatelessWidget {
         margin: const EdgeInsets.only(top: 3, left: 5),
         decoration: BoxDecoration(
             color: isSelected ? AppColors.circleColorBG : const Color.fromARGB(255, 245, 230, 247),
-            borderRadius: BorderRadius.circular(4)),
+            borderRadius: BorderRadius.circular(4),),
         child: Icon(
           icon,
           color:isSelected? AppColors.white: AppColors.black,
@@ -131,30 +134,4 @@ class BoxButton extends StatelessWidget {
     );
   }
 }
-// / Singleton class to manage active popups
-class PopupManager {
-  static final PopupManager _instance = PopupManager._internal();
 
-  factory PopupManager() {
-    return _instance;
-  }
-
-  PopupManager._internal();
-
-  final List<OverlayEntry> _activePopups = [];
-
-  void addPopup(OverlayEntry entry) {
-    _activePopups.add(entry);
-  }
-
-  void removePopup(OverlayEntry entry) {
-    _activePopups.remove(entry);
-  }
-
-  void hideAllPopups() {
-    for (final popup in _activePopups) {
-      popup.remove();
-    }
-    _activePopups.clear();
-  }
-}

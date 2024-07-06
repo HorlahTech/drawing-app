@@ -5,11 +5,10 @@ import 'package:drawing_app_test/models/drawing_points.dart';
 
 import 'package:drawing_app_test/utils/app_colors.dart';
 import 'package:drawing_app_test/views/painter.dart';
-import 'package:drawing_app_test/views/widgets/circle_button.dart';
+import 'package:drawing_app_test/views/widgets/boxbutton.dart';
 import 'package:drawing_app_test/views/widgets/color_palette.dart';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -29,17 +28,17 @@ class _DrawingAppState extends ConsumerState<DrawingApp>
   @override
   void initState() {
     animationController = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 500));
+        vsync: this, duration: const Duration(milliseconds: 500),);
     super.initState();
   }
 
 final  double _width = 1000, _height = 1800;
-  double _scale = 1.0;
+  double _scale = 1.0,_pencil = 3;
   @override
   Widget build(BuildContext context) {
     final stateRead = ref.read(drawingController.notifier);
     final screenSize = MediaQuery.of(context).size;
-    final deviceorientation = MediaQuery.of(context).orientation;
+
     return Scaffold(
       backgroundColor: AppColors.white,
       body:  OrientationBuilder(
@@ -48,7 +47,8 @@ final  double _width = 1000, _height = 1800;
           return Stack(
             clipBehavior: Clip.none,
             children: [
-              /// Canvas
+              /// drawing Canvas
+
               ref.watch(drawingController).isZoom
                   ? InteractiveViewer(
                       onInteractionUpdate: (scaleDetails) {
@@ -89,6 +89,7 @@ final  double _width = 1000, _height = 1800;
                         ),
                       ),
                     ),
+              /// tools
               Positioned(
                 top: isPortrait? kToolbarHeight + 20  : - 170,
                 left: isPortrait? 0 : kToolbarHeight+170,
@@ -111,15 +112,15 @@ final  double _width = 1000, _height = 1800;
                               right: BorderSide(
                                 // strokeAlign: BorderSide.strokeAlignOutside,
                                   width: 3,
-                                  color: AppColors.circleColorBG)),
+                                  color: AppColors.circleColorBG,),),
                           color: AppColors.white,
                           boxShadow: [
                             BoxShadow(
                                 blurRadius: 5,
                                 spreadRadius: 2,
                                 blurStyle: BlurStyle.outer,
-                                color: AppColors.black.withOpacity(.5))
-                          ]),
+                                color: AppColors.black.withOpacity(.5),),
+                          ],),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
@@ -141,10 +142,15 @@ final  double _width = 1000, _height = 1800;
                             onTap: stateRead.clear,
                             icon: FontAwesomeIcons.xmark,
                           ),
-                          BoxButton.Slider(
+                          BoxButton.slider(
                               icon: FontAwesomeIcons.pencil,
-                              sliderValue: ref.watch(drawingController).pencilWidth,
-                              onChanged:  stateRead.pencilSizeOnchange
+                              sliderValue: _pencil,
+                              // ref.watch(drawingController).pencilWidth,
+                              onChanged: (val){
+                                setState(() {
+                                  _pencil = val;
+                                });
+                              },
                             // stateRead.pencilSizeOnchange,
                           ),
                           BoxButton(
@@ -171,6 +177,7 @@ final  double _width = 1000, _height = 1800;
                               },),
                             ],
                           ),
+                          ///pencil color picker
                           ColorPalette(
                             title: 'Pick Pencil color!',
                             onColorChanged: stateRead.changePencilColor,
@@ -179,6 +186,7 @@ final  double _width = 1000, _height = 1800;
                             onTap: (){
                               showDialog(context: context, builder: (ctx)=> const AlertDialog(content:  Text('Changing canvas color will clear your canvas, are you sure to Proceed'),));
                             },
+                            /// background color picker
                             child: ColorPalette(
                               title: 'Pick Canvas color!',
                               onColorChanged: stateRead.changeBgColor,
@@ -213,145 +221,8 @@ final  double _width = 1000, _height = 1800;
               ),
             ],
           );
-        }
+        },
       ),
-    );
-  }
-}
-class AdaptiveBoxButtonLayout extends ConsumerWidget {
-  final AnimationController animationController;
-  final double screenHeight;
-  final double screenWidth;
-
-  AdaptiveBoxButtonLayout({
-    required this.animationController,
-    required this.screenHeight,
-    required this.screenWidth,
-  });
-
-  @override
-  Widget build(BuildContext context, ref) {
-    final stateRead = ref.read(drawingController.notifier);
-    return OrientationBuilder(
-      builder: (context, orientation) {
-        final isPortrait = orientation == Orientation.portrait;
-
-        return Transform.rotate(
-          angle: isPortrait ? 0 : 3.14 / 2,
-          child: Positioned(
-            top: isPortrait ? kToolbarHeight + 10 : 0,
-            left: isPortrait ? 0 : kToolbarHeight + 10,
-            child: SlideTransition(
-              position: Tween<Offset>(
-                begin: const Offset(-1, 0),
-                end: Offset.zero,
-              ).animate(animationController),
-              child: Container(
-                width: isPortrait ? 70 : screenWidth - 300,
-                height: isPortrait ? screenHeight - 300 : 70,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(10),
-                    bottomRight: Radius.circular(10),
-                    topLeft: isPortrait ? Radius.circular(0) : Radius.circular(10),
-                    bottomLeft: isPortrait ? Radius.circular(0) : Radius.circular(10),
-                  ),
-                  border: Border(
-                    right: BorderSide(
-                      width: 3,
-                      color: AppColors.circleColorBG,
-                    ),
-                  ),
-                  color: AppColors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      blurRadius: 5,
-                      spreadRadius: 2,
-                      blurStyle: BlurStyle.outer,
-                      color: AppColors.black.withOpacity(.5),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    BoxButton(
-                      onTap: stateRead.zoom,
-                      icon: ref.watch(drawingController).isZoom
-                          ? Icons.zoom_out
-                          : Icons.zoom_in,
-                    ),
-                    BoxButton(
-                      onTap: stateRead.undo,
-                      icon: FontAwesomeIcons.arrowRotateLeft,
-                    ),
-                    BoxButton(
-                      onTap: stateRead.redo,
-                      icon: FontAwesomeIcons.arrowRotateRight,
-                    ),
-                    BoxButton(
-                      onTap: stateRead.clear,
-                      icon: FontAwesomeIcons.xmark,
-                    ),
-                    BoxButton.Slider(
-                      icon: FontAwesomeIcons.pencil,
-                      sliderValue: ref.watch(drawingController).pencilWidth,
-                      onChanged: stateRead.pencilSizeOnchange,
-                    ),
-                    BoxButton(
-                      isSelected: ref.watch(drawingController).isErazer,
-                      icon: FontAwesomeIcons.eraser,
-                      onTap: stateRead.erazerOnchange,
-                    ),
-                    BoxButton(
-                      icon: FontAwesomeIcons.shapes,
-                      hasPopUp: true,
-                      popupChildren: [
-                        BoxButton(
-                          icon: FontAwesomeIcons.circle,
-                          onTap: () {
-                            stateRead.shapeOnchange(DrawingMode.circle);
-                          },
-                        ),
-                        BoxButton(
-                          icon: FontAwesomeIcons.square,
-                          onTap: () {
-                            stateRead.shapeOnchange(DrawingMode.sqaure);
-                          },
-                        ),
-                        BoxButton(
-                          icon: FontAwesomeIcons.openid,
-                          onTap: () {
-                            stateRead.shapeOnchange(DrawingMode.scibble);
-                          },
-                        ),
-                      ],
-                    ),
-                    ColorPalette(
-                      title: 'Pick Pencil color!',
-                      onColorChanged: stateRead.changePencilColor,
-                    ),
-                    InkWell(
-                      onTap: () {
-                        showDialog(
-                          context: context,
-                          builder: (ctx) => const AlertDialog(
-                            content: Text('Changing canvas color will clear your canvas, are you sure to Proceed'),
-                          ),
-                        );
-                      },
-                      child: ColorPalette(
-                        title: 'Pick Canvas color!',
-                        onColorChanged: stateRead.changeBgColor,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        );
-      },
     );
   }
 }

@@ -26,11 +26,8 @@ class DrawingPainter extends CustomPainter {
         // create rect to use rectangle and circle
         Rect rect = Rect.fromPoints(firstPoint, lastPoint);
 
-        // Calculate center point from the first and last points
-        Offset centerPoint = (firstPoint / 2) + (lastPoint / 2);
 
-        // Calculate path's radius from the first and last points
-        double radius = (firstPoint - lastPoint).distance / 2;
+
 
         if (notLastOffset && drawingPoint.mode == DrawingMode.scibble) {
           final current = drawingPoint.offsets[i];
@@ -40,8 +37,7 @@ class DrawingPainter extends CustomPainter {
           canvas.drawLine(firstPoint, lastPoint, paint);
         } else if (drawingPoint.mode == DrawingMode.circle) {
           canvas.drawOval(rect, paint);
-          // Uncomment this line if you need a PERFECT CIRCLE
-          // canvas.drawCircle(centerPoint, radius , paint);
+
         } else if (drawingPoint.mode == DrawingMode.sqaure) {
           canvas.drawRRect(
             RRect.fromRectAndRadius(rect, const Radius.circular(0)),
