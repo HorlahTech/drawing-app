@@ -1,6 +1,6 @@
 # drawing_app_test
 Drawing App
-A Flutter drawing application with a variety of tools and features to enhance the user experience. This app includes a toolbar with functionality for zooming, undoing, redoing, clearing the canvas, adjusting pencil size, erasing, picking shapes, selecting pencil colors, and changing the background color. The toolbar can also be hidden to provide a full-screen drawing experience.
+A Flutter drawing application for drawing on canvas. This app includes a toolbar with functionality for zooming, undoing, redoing, clearing the canvas, adjusting pencil size, erasing, picking shapes, selecting pencil colors, and changing the background color. The toolbar can also be hidden to provide a full-screen drawing experience. It also support both portrait and Lanscape orientation for easy drawing
 
 Features
 - Zoom: Allows users to zoom in and out of the canvas.
@@ -14,7 +14,7 @@ Features
 - Hide Toolbar: The toolbar can be hidden to provide more drawing space.
 
 Preview:
-<img width="85%" src="https://github.com/HorlahTech/drawing-app/blob/main/WhatsApp%20GIF%202024-07-07%20at%2000.27.50.gif" alt="drawing app"></img>
+<img width="55%" src="https://github.com/HorlahTech/drawing-app/blob/main/WhatsApp%20GIF%202024-07-07%20at%2000.27.50.gif" alt="drawing app"></img>
 
 Installation
 Clone the repository:
