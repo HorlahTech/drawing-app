@@ -5,16 +5,18 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_svg/svg.dart';
 
 class ColorPalette extends StatelessWidget {
- final String title;
- final void Function(Color) onColorChanged;
-const  ColorPalette({
+  final String title;
+  final void Function(Color) onColorChanged;
+  const ColorPalette({
     super.key,
     required this.title,
     required this.onColorChanged,
   });
 
   @override
-  Widget build(BuildContext context, ) {
+  Widget build(
+    BuildContext context,
+  ) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.start,
@@ -24,7 +26,9 @@ const  ColorPalette({
           cursor: SystemMouseCursors.click,
           child: GestureDetector(
             onTap: () {
-              showColorWheel(context, );
+              showColorWheel(
+                context,
+              );
             },
             child: SvgPicture.asset(
               'assets/images/color_wheel.svg',
@@ -37,7 +41,9 @@ const  ColorPalette({
     );
   }
 
-  void showColorWheel(BuildContext context, ) {
+  void showColorWheel(
+    BuildContext context,
+  ) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -45,8 +51,9 @@ const  ColorPalette({
           title: Text(title),
           content: SingleChildScrollView(
             child: ColorPicker(
-                pickerColor: AppColors.circleColorBG,
-                onColorChanged: onColorChanged,),
+              pickerColor: AppColors.circleColorBG,
+              onColorChanged: onColorChanged,
+            ),
           ),
           actions: <Widget>[
             TextButton(

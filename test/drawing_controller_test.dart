@@ -5,7 +5,6 @@ import 'package:drawing_app_test/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-
 void main() {
   group('DrawingController', () {
     late DrawingController controller;
@@ -35,13 +34,16 @@ void main() {
     });
 
     test('onPanUpdate updates the current drawing point', () {
-      final startDetails = TestPanStartDetails(localPosition: const Offset(10, 10));
+      final startDetails =
+          TestPanStartDetails(localPosition: const Offset(10, 10));
       controller.onPanStart(startDetails);
 
-      final updateDetails = TestPanUpdateDetails(localPosition: const Offset(20, 20));
+      final updateDetails =
+          TestPanUpdateDetails(localPosition: const Offset(20, 20));
       controller.onPanUpdate(updateDetails);
 
-      expect(controller.drawingPoints.first.offsets, [const Offset(10, 10), const Offset(20, 20)]);
+      expect(controller.drawingPoints.first.offsets,
+          [const Offset(10, 10), const Offset(20, 20)]);
     });
 
     test('onPanEnd clears the current drawing point', () {

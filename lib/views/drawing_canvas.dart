@@ -29,12 +29,15 @@ class _DrawingAppState extends ConsumerState<DrawingApp>
   @override
   void initState() {
     animationController = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 500),);
+      vsync: this,
+      duration: const Duration(milliseconds: 500),
+    );
     super.initState();
   }
 
-  double _width = 1000, _height = 1800;
-  double _scale = 1.0,_pencil = 3;
+  double _width = 1000;
+  double _scale = 1.0;
+  final double _height = 1800;
   @override
   Widget build(BuildContext context) {
     final stateRead = ref.read(drawingController.notifier);
@@ -42,9 +45,9 @@ class _DrawingAppState extends ConsumerState<DrawingApp>
 
     return Scaffold(
       backgroundColor: AppColors.white,
-      body:  OrientationBuilder(
-          builder: (context, orientation) {
-            final isPortrait = orientation ==Orientation.portrait;
+      body: OrientationBuilder(
+        builder: (context, orientation) {
+          final isPortrait = orientation == Orientation.portrait;
           return Stack(
             clipBehavior: Clip.none,
             children: [
@@ -52,7 +55,7 @@ class _DrawingAppState extends ConsumerState<DrawingApp>
 
               ref.watch(drawingController).isZoom
                   ? Zoom(
-                backgroundColor: ref.watch(drawingController).bgColor,
+                      backgroundColor: ref.watch(drawingController).bgColor,
                       onScaleUpdate: (scale, widght) {
                         setState(() {
                           _scale = scale;
@@ -79,7 +82,7 @@ class _DrawingAppState extends ConsumerState<DrawingApp>
                       child: Transform.scale(
                         scale: _scale,
                         child: Container(
-                          width: _height ,
+                          width: _height,
                           height: _width,
                           color: ref.watch(drawingController).bgColor,
                           child: CustomPaint(
@@ -91,38 +94,43 @@ class _DrawingAppState extends ConsumerState<DrawingApp>
                         ),
                       ),
                     ),
+
               /// tools
               Positioned(
-                top: isPortrait? kToolbarHeight + 20  : - 170,
-                left: isPortrait? 0 : kToolbarHeight+170,
+                top: isPortrait ? kToolbarHeight + 20 : -170,
+                left: isPortrait ? 0 : kToolbarHeight + 170,
                 child: Transform.rotate(
-                  angle: isPortrait ? 0 : pi/2,
+                  angle: isPortrait ? 0 : pi / 2,
                   child: SlideTransition(
                     position: Tween<Offset>(
                       begin: const Offset(-1, 0),
                       end: Offset.zero,
                     ).animate(animationController),
                     child: Container(
-                      width: isPortrait? 70 : 60,
-                      height:isPortrait?  screenSize.height - 300 : 400,
+                      width: isPortrait ? 70 : 60,
+                      height: isPortrait ? screenSize.height - 300 : 400,
                       decoration: BoxDecoration(
-                          borderRadius: const BorderRadius.only(
-                            topRight: Radius.circular(10),
-                            bottomRight: Radius.circular(10),
+                        borderRadius: const BorderRadius.only(
+                          topRight: Radius.circular(10),
+                          bottomRight: Radius.circular(10),
+                        ),
+                        border: const Border(
+                          right: BorderSide(
+                            // strokeAlign: BorderSide.strokeAlignOutside,
+                            width: 3,
+                            color: AppColors.circleColorBG,
                           ),
-                          border: const Border(
-                              right: BorderSide(
-                                // strokeAlign: BorderSide.strokeAlignOutside,
-                                  width: 3,
-                                  color: AppColors.circleColorBG,),),
-                          color: AppColors.white,
-                          boxShadow: [
-                            BoxShadow(
-                                blurRadius: 5,
-                                spreadRadius: 2,
-                                blurStyle: BlurStyle.outer,
-                                color: AppColors.black.withOpacity(.5),),
-                          ],),
+                        ),
+                        color: AppColors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            blurRadius: 5,
+                            spreadRadius: 2,
+                            blurStyle: BlurStyle.outer,
+                            color: AppColors.black.withOpacity(.5),
+                          ),
+                        ],
+                      ),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
@@ -145,19 +153,17 @@ class _DrawingAppState extends ConsumerState<DrawingApp>
                             icon: FontAwesomeIcons.xmark,
                           ),
                           BoxButton.slider(
-                              icon: FontAwesomeIcons.pencil,
-                              sliderValue:
-                              ref.watch(drawingController).pencilWidth,
-                              onChanged:
-                            stateRead.pencilSizeOnchange,
+                            icon: FontAwesomeIcons.pencil,
+                            sliderValue:
+                                ref.watch(drawingController).pencilWidth,
+                            onChanged: stateRead.pencilSizeOnchange,
                           ),
                           BoxButton(
                             isSelected: ref.watch(drawingController).isErazer,
                             icon: FontAwesomeIcons.eraser,
-                            onTap:stateRead.erazerOnchange,
+                            onTap: stateRead.erazerOnchange,
                           ),
                           BoxButton(
-
                             icon: FontAwesomeIcons.shapes,
                             hasPopUp: true,
                             popupChildren: [
@@ -167,23 +173,36 @@ class _DrawingAppState extends ConsumerState<DrawingApp>
                                   stateRead.shapeOnchange(DrawingMode.circle);
                                 },
                               ),
-                              BoxButton(icon: FontAwesomeIcons.square, onTap: (){
-                                stateRead.shapeOnchange(DrawingMode.sqaure);
-                              },),
-                              BoxButton(icon: FontAwesomeIcons.openid, onTap: (){
-                                stateRead.shapeOnchange(DrawingMode.scibble);
-                              },),
+                              BoxButton(
+                                icon: FontAwesomeIcons.square,
+                                onTap: () {
+                                  stateRead.shapeOnchange(DrawingMode.sqaure);
+                                },
+                              ),
+                              BoxButton(
+                                icon: FontAwesomeIcons.openid,
+                                onTap: () {
+                                  stateRead.shapeOnchange(DrawingMode.scibble);
+                                },
+                              ),
                             ],
                           ),
+
                           ///pencil color picker
                           ColorPalette(
                             title: 'Pick Pencil color!',
                             onColorChanged: stateRead.changePencilColor,
                           ),
                           InkWell(
-                            onTap: (){
-                              showDialog(context: context, builder: (ctx)=> const AlertDialog(content:  Text('Changing canvas color will clear your canvas, are you sure to Proceed'),));
+                            onTap: () {
+                              showDialog(
+                                  context: context,
+                                  builder: (ctx) => const AlertDialog(
+                                        content: Text(
+                                            'Changing canvas color will clear your canvas, are you sure to Proceed'),
+                                      ));
                             },
+
                             /// background color picker
                             child: ColorPalette(
                               title: 'Pick Canvas color!',
@@ -195,7 +214,6 @@ class _DrawingAppState extends ConsumerState<DrawingApp>
                     ),
                   ),
                 ),
-
               ),
 
               Padding(

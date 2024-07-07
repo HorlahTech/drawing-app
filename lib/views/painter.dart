@@ -26,10 +26,7 @@ class DrawingPainter extends CustomPainter {
         // create rect to use rectangle and circle
         Rect rect = Rect.fromPoints(firstPoint, lastPoint);
 
-
-
-
-        if (notLastOffset && drawingPoint.mode == DrawingMode.scibble) {print(drawingPoint.width);
+        if (notLastOffset && drawingPoint.mode == DrawingMode.scibble) {
           final current = drawingPoint.offsets[i];
           final next = drawingPoint.offsets[i + 1];
           canvas.drawLine(current, next, paint);
@@ -37,7 +34,6 @@ class DrawingPainter extends CustomPainter {
           canvas.drawLine(firstPoint, lastPoint, paint);
         } else if (drawingPoint.mode == DrawingMode.circle) {
           canvas.drawOval(rect, paint);
-
         } else if (drawingPoint.mode == DrawingMode.sqaure) {
           canvas.drawRRect(
             RRect.fromRectAndRadius(rect, const Radius.circular(0)),
