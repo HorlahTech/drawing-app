@@ -74,7 +74,7 @@ class BoxButton extends StatelessWidget {
             child: Slider(
               value: sliderValue!,
               min: 1,
-              max: 10,
+              max: 20,
               onChanged: onChanged,
 
             ),

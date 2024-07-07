@@ -29,7 +29,7 @@ class DrawingPainter extends CustomPainter {
 
 
 
-        if (notLastOffset && drawingPoint.mode == DrawingMode.scibble) {
+        if (notLastOffset && drawingPoint.mode == DrawingMode.scibble) {print(drawingPoint.width);
           final current = drawingPoint.offsets[i];
           final next = drawingPoint.offsets[i + 1];
           canvas.drawLine(current, next, paint);

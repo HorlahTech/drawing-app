@@ -20,7 +20,7 @@ void main() {
       expect(controller.isZoom, isFalse);
       expect(controller.bgColor, AppColors.white);
       expect(controller.pencilColor, Colors.black);
-      expect(controller.pencilWidth, 2.0);
+      expect(controller.pencilWidth, 5.0);
       expect(controller.isErazer, isFalse);
       expect(controller.currentDrawingPoint, isNull);
       expect(controller.mode, DrawingMode.scibble);

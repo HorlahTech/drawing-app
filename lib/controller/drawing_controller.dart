@@ -13,7 +13,7 @@ class DrawingController extends ChangeNotifier {
   bool isZoom = false;
   Color bgColor = AppColors.white;
   Color pencilColor = Colors.black;
-  double pencilWidth = 2.0;
+  double pencilWidth = 5.0;
   bool isErazer = false;
   DrawingPoint? currentDrawingPoint;
   DrawingMode mode = DrawingMode.scibble;

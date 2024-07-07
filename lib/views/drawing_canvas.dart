@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:zoom_widget/zoom_widget.dart';
 
 class DrawingApp extends ConsumerStatefulWidget {
   const DrawingApp({super.key});
@@ -32,7 +33,7 @@ class _DrawingAppState extends ConsumerState<DrawingApp>
     super.initState();
   }
 
-final  double _width = 1000, _height = 1800;
+  double _width = 1000, _height = 1800;
   double _scale = 1.0,_pencil = 3;
   @override
   Widget build(BuildContext context) {
@@ -50,12 +51,13 @@ final  double _width = 1000, _height = 1800;
               /// drawing Canvas
 
               ref.watch(drawingController).isZoom
-                  ? InteractiveViewer(
-                      onInteractionUpdate: (scaleDetails) {
+                  ? Zoom(
+                backgroundColor: ref.watch(drawingController).bgColor,
+                      onScaleUpdate: (scale, widght) {
                         setState(() {
-                          _scale = scaleDetails.scale;
+                          _scale = scale;
                           // _height = _height * _scale;
-                          // _width = _width * _scale;
+                          _width = _width * _scale;
                         });
                       },
                       child: Container(
@@ -144,14 +146,10 @@ final  double _width = 1000, _height = 1800;
                           ),
                           BoxButton.slider(
                               icon: FontAwesomeIcons.pencil,
-                              sliderValue: _pencil,
-                              // ref.watch(drawingController).pencilWidth,
-                              onChanged: (val){
-                                setState(() {
-                                  _pencil = val;
-                                });
-                              },
-                            // stateRead.pencilSizeOnchange,
+                              sliderValue:
+                              ref.watch(drawingController).pencilWidth,
+                              onChanged:
+                            stateRead.pencilSizeOnchange,
                           ),
                           BoxButton(
                             isSelected: ref.watch(drawingController).isErazer,
