@@ -36,7 +36,7 @@ class BoxButton extends StatelessWidget {
   final bool isSlider;
   final bool isSelected;
   final List<Widget>? popupChildren;
-  final void Function(double)? onChanged;
+  final ValueChanged<double>? onChanged;
 
   OverlayEntry? _overlayEntry;
 
@@ -66,7 +66,6 @@ class BoxButton extends StatelessWidget {
 
   void _hidePopup() {
     if (_overlayEntry != null) {
-      // _overlayEntry!.remove();
       PopupManager()
           .removePopup(_overlayEntry!); // Remove from active popups list
       _overlayEntry = null;
@@ -84,6 +83,7 @@ class BoxButton extends StatelessWidget {
                 min: 1,
                 max: 20,
                 onChanged: onChanged,
+                divisions: 5,
               ),
             )
           : Container(

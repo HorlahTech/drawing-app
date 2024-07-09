@@ -1,6 +1,7 @@
 import 'dart:math' show pi;
 
 import 'package:drawing_app_test/controller/drawing_controller.dart';
+import 'package:drawing_app_test/controller/popup_manager.dart';
 import 'package:drawing_app_test/models/drawing_points.dart';
 
 import 'package:drawing_app_test/utils/app_colors.dart';
@@ -38,6 +39,7 @@ class _DrawingAppState extends ConsumerState<DrawingApp>
   double _width = 1000;
   double _scale = 1.0;
   final double _height = 1800;
+  final ValueNotifier<bool> _isOpen = ValueNotifier<bool>(false);
   @override
   Widget build(BuildContext context) {
     final stateRead = ref.read(drawingController.notifier);
@@ -53,47 +55,41 @@ class _DrawingAppState extends ConsumerState<DrawingApp>
             children: [
               /// drawing Canvas
 
-              ref.watch(drawingController).isZoom
-                  ? Zoom(
-                      backgroundColor: ref.watch(drawingController).bgColor,
-                      onScaleUpdate: (scale, widght) {
-                        setState(() {
-                          _scale = scale;
-                          // _height = _height * _scale;
-                          _width = _width * _scale;
-                        });
-                      },
-                      child: Container(
-                        width: double.maxFinite,
-                        height: double.maxFinite,
-                        color: ref.watch(drawingController).bgColor,
-                        child: CustomPaint(
-                          painter: DrawingPainter(
-                            drawingPoints:
-                                ref.watch(drawingController).drawingPoints,
-                          ),
-                        ),
-                      ),
-                    )
-                  : GestureDetector(
-                      onPanStart: stateRead.onPanStart,
-                      onPanUpdate: stateRead.onPanUpdate,
-                      onPanEnd: stateRead.onPanEnd,
-                      child: Transform.scale(
-                        scale: _scale,
-                        child: Container(
-                          width: _height,
-                          height: _width,
-                          color: ref.watch(drawingController).bgColor,
-                          child: CustomPaint(
-                            painter: DrawingPainter(
-                              drawingPoints:
-                                  ref.watch(drawingController).drawingPoints,
-                            ),
-                          ),
+              Zoom(
+                backgroundColor: ref.watch(drawingController).bgColor,
+                onScaleUpdate: (scale, widght) {
+                  setState(() {
+                    _scale = scale;
+                    // _height = _height * _scale;
+                    _width = _width * _scale;
+                  });
+                },
+                child: GestureDetector(
+                  onPanStart: ref.watch(drawingController).isZoom
+                      ? null
+                      : stateRead.onPanStart,
+                  onPanUpdate: ref.watch(drawingController).isZoom
+                      ? null
+                      : stateRead.onPanUpdate,
+                  onPanEnd: ref.watch(drawingController).isZoom
+                      ? null
+                      : stateRead.onPanEnd,
+                  child: Transform.scale(
+                    scale: _scale,
+                    child: Container(
+                      width: _height,
+                      height: _width,
+                      color: ref.watch(drawingController).bgColor,
+                      child: CustomPaint(
+                        painter: DrawingPainter(
+                          drawingPoints:
+                              ref.watch(drawingController).drawingPoints,
                         ),
                       ),
                     ),
+                  ),
+                ),
+              ),
 
               /// tools
               Positioned(
@@ -152,12 +148,20 @@ class _DrawingAppState extends ConsumerState<DrawingApp>
                             onTap: stateRead.clear,
                             icon: FontAwesomeIcons.xmark,
                           ),
-                          BoxButton.slider(
-                            icon: FontAwesomeIcons.pencil,
-                            sliderValue:
-                                ref.watch(drawingController).pencilWidth,
-                            onChanged: stateRead.pencilSizeOnchange,
+                          Consumer(
+                            builder: (context, ref, _) {
+                              final sliderValue =
+                                  ref.watch(drawingController).pencilWidth;
+                              final sliderOnchange =
+                                  ref.read(drawingController.notifier);
+                              return BoxButton.slider(
+                                icon: FontAwesomeIcons.pencil,
+                                sliderValue: sliderValue,
+                                onChanged: sliderOnchange.pencilSizeOnchange,
+                              );
+                            },
                           ),
+
                           BoxButton(
                             isSelected: ref.watch(drawingController).isErazer,
                             icon: FontAwesomeIcons.eraser,
@@ -180,6 +184,12 @@ class _DrawingAppState extends ConsumerState<DrawingApp>
                                 },
                               ),
                               BoxButton(
+                                icon: FontAwesomeIcons.slash,
+                                onTap: () {
+                                  stateRead.shapeOnchange(DrawingMode.line);
+                                },
+                              ),
+                              BoxButton(
                                 icon: FontAwesomeIcons.openid,
                                 onTap: () {
                                   stateRead.shapeOnchange(DrawingMode.scibble);
@@ -196,11 +206,13 @@ class _DrawingAppState extends ConsumerState<DrawingApp>
                           InkWell(
                             onTap: () {
                               showDialog(
-                                  context: context,
-                                  builder: (ctx) => const AlertDialog(
-                                        content: Text(
-                                            'Changing canvas color will clear your canvas, are you sure to Proceed'),
-                                      ));
+                                context: context,
+                                builder: (ctx) => const AlertDialog(
+                                  content: Text(
+                                    'Changing canvas color will clear your canvas, are you sure to Proceed',
+                                  ),
+                                ),
+                              );
                             },
 
                             /// background color picker
@@ -218,21 +230,26 @@ class _DrawingAppState extends ConsumerState<DrawingApp>
 
               Padding(
                 padding: const EdgeInsets.all(20.0),
-                child: GestureDetector(
-                  onTap: () {
-                    if (animationController.isCompleted) {
-                      animationController.reverse();
-                    } else {
-                      animationController.forward();
-                    }
+                child: ValueListenableBuilder(
+                  valueListenable: _isOpen,
+                  builder: (context, isOpen, _) {
+                    return GestureDetector(
+                      onTap: () {
+                        PopupManager().hideAllPopups();
+                        if (isOpen) {
+                          animationController.reverse();
+                        } else {
+                          animationController.forward();
+                        }
+                        _isOpen.value = !_isOpen.value;
+                      },
+                      child: Icon(
+                        isOpen ? Icons.cancel_outlined : Icons.menu,
+                        color: AppColors.circleColorBG,
+                        size: 30,
+                      ),
+                    );
                   },
-                  child: Icon(
-                    animationController.isCompleted
-                        ? Icons.cancel_outlined
-                        : Icons.menu,
-                    color: AppColors.circleColorBG,
-                    size: 30,
-                  ),
                 ),
               ),
             ],

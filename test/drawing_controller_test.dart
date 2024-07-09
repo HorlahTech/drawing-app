@@ -42,8 +42,10 @@ void main() {
           TestPanUpdateDetails(localPosition: const Offset(20, 20));
       controller.onPanUpdate(updateDetails);
 
-      expect(controller.drawingPoints.first.offsets,
-          [const Offset(10, 10), const Offset(20, 20)]);
+      expect(
+        controller.drawingPoints.first.offsets,
+        [const Offset(10, 10), const Offset(20, 20)],
+      );
     });
 
     test('onPanEnd clears the current drawing point', () {

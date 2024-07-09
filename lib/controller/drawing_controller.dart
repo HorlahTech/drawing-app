@@ -1,3 +1,4 @@
+import 'package:drawing_app_test/controller/popup_manager.dart';
 import 'package:drawing_app_test/models/drawing_points.dart';
 import 'package:drawing_app_test/utils/app_colors.dart';
 import 'package:flutter/material.dart';
@@ -13,20 +14,22 @@ class DrawingController extends ChangeNotifier {
   bool isZoom = false;
   Color bgColor = AppColors.white;
   Color pencilColor = Colors.black;
-  double pencilWidth = 5.0;
+  double _pencilWidth = 5.0;
   bool isErazer = false;
   DrawingPoint? currentDrawingPoint;
   DrawingMode mode = DrawingMode.scibble;
+  double get pencilWidth => _pencilWidth;
 
   /// onPanStart create drawingpoint and  recored the ofset of user gesture
   void onPanStart(details) {
+    PopupManager().hideAllPopups();
     currentDrawingPoint = DrawingPoint(
       offsets: [
         details.localPosition,
       ],
       color: isErazer ? bgColor : pencilColor,
       mode: mode,
-      width: pencilWidth,
+      width: _pencilWidth,
     );
     if (currentDrawingPoint == null) return;
     drawingPoints.add(currentDrawingPoint!);
@@ -104,8 +107,7 @@ class DrawingController extends ChangeNotifier {
   }
 
   void pencilSizeOnchange(double value) {
-    pencilWidth = value;
-
+    _pencilWidth = value;
     notifyListeners();
   }
 
