@@ -39,6 +39,9 @@ class DrawingPainter extends CustomPainter {
             RRect.fromRectAndRadius(rect, const Radius.circular(0)),
             paint,
           );
+        }else if(drawingPoint.mode == DrawingMode.eraser){
+          drawingPoints.removeWhere((drawnPath) =>
+              drawnPath.offsets.contains(drawnPath));
         }
       }
     }

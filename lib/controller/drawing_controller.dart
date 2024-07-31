@@ -101,7 +101,7 @@ class DrawingController extends ChangeNotifier {
   }
 
   void erazerOnchange() {
-    mode = DrawingMode.scibble;
+    mode = DrawingMode.eraser;
     isErazer = !isErazer;
     notifyListeners();
   }
