@@ -41,7 +41,7 @@ class DrawingPainter extends CustomPainter {
           );
         }else if(drawingPoint.mode == DrawingMode.eraser){
           drawingPoints.removeWhere((drawnPath) =>
-              drawnPath.offsets.contains(drawnPath));
+              drawnPath.offsets.contains(drawnPath.offsets));
         }
       }
     }

@@ -27,7 +27,7 @@ class DrawingController extends ChangeNotifier {
       offsets: [
         details.localPosition,
       ],
-      color: isErazer ? bgColor : pencilColor,
+      color:  pencilColor,
       mode: mode,
       width: _pencilWidth,
     );
